@@ -398,18 +398,25 @@ namespace Kultie.Platformer2DSystem
             }
         }
 
+        private bool _dashCoolingDown;
         void DashCheck()
         {
             if (Input.GetKeyDown(KeyCode.C) && _currentDashCount > 0 && CurrentState != State.Dash)
             {
-                StartCoroutine(DashCoolDown());
                 StartDash();
+                if (!_dashCoolingDown && _currentDashCount == 0)
+                {
+                    StartCoroutine(DashCoolDown());
+                }
+
             }
 
             IEnumerator DashCoolDown()
             {
+                _dashCoolingDown = true;
                 yield return new WaitForSeconds(dashSetting.dashCoolDown);
-                _currentDashCount = 2;
+                _currentDashCount = dashSetting.dashCount;
+                _dashCoolingDown = false;
             }
         }
 

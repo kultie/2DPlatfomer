@@ -26,7 +26,7 @@ namespace Kultie.Platformer2DSystem
 
         private void Update()
         {
-            if (_physic.collisions.below)
+            if (_physic.collisions.below || _physic.collisions.above)
             {
                 _verticalVelocity = 0;
             }
