@@ -165,7 +165,7 @@ namespace Kultie.Platformer2DSystem
         {
             CurrentState = State.Dash;
             _currentDashCount--;
-            StartCoroutine(ProcessDash());
+            StartCoroutine(Leap());
 
             IEnumerator ProcessDash()
             {
@@ -183,7 +183,7 @@ namespace Kultie.Platformer2DSystem
                 _gravitational.EnableGravity(true, true);
                 if (_physic.collisions.below)
                 {
-                    CurrentState = State.Grounded;
+                    CurrentState = State.Idle;
                 }
                 else
                 {
@@ -195,7 +195,7 @@ namespace Kultie.Platformer2DSystem
             {
                 float time = dashSetting.dashTime;
                 CurrentState = State.Dash;
-                _gravitational.SetVelocity(dashSetting.dashSpeed / 2);
+                _gravitational.Jump(dashSetting.dashSpeed / 2);
                 while (time > 0)
                 {
                     time -= Time.deltaTime;
@@ -207,7 +207,7 @@ namespace Kultie.Platformer2DSystem
                 // _physic.SetVelocityX(0);
                 if (_physic.collisions.below)
                 {
-                    CurrentState = State.Grounded;
+                    CurrentState = State.Idle;
                 }
                 else
                 {
