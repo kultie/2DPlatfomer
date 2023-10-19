@@ -40,7 +40,9 @@ namespace Kultie.Platformer2DSystem
             if (_isGravityEnable)
             {
                 _verticalVelocity += gravity * Time.deltaTime;
+                _verticalVelocity = Mathf.Max(_verticalVelocity, gravity);
             }
+
 
             _physic.SetVelocityY(_verticalVelocity * Time.deltaTime);
         }

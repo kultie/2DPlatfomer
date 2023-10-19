@@ -75,7 +75,13 @@ namespace Kultie.Platformer2DSystem
                     break;
                 case State.Run:
                     _currentJumpCount = jumpSetting.jumpCount;
+                    _currentDashCount = dashSetting.dashCount;
                     _animator.Play("Run");
+                    if (_dashCoolDown != null)
+                    {
+                        StopCoroutine(_dashCoolDown);
+                    }
+
                     break;
                 case State.Air:
                     _animator.Play("Fall");
@@ -93,7 +99,13 @@ namespace Kultie.Platformer2DSystem
                     break;
                 case State.Idle:
                     _currentJumpCount = jumpSetting.jumpCount;
+                    _currentDashCount = dashSetting.dashCount;
                     _animator.Play("Idle");
+                    if (_dashCoolDown != null)
+                    {
+                        StopCoroutine(_dashCoolDown);
+                    }
+
                     break;
                 case State.Dash:
                     if (_physic.collisions.below)
@@ -211,6 +223,8 @@ namespace Kultie.Platformer2DSystem
             _currentJumpCount--;
         }
 
+        #region State Update
+
         private void IdleState()
         {
             float targetVelocityX = CheckInput();
@@ -286,6 +300,8 @@ namespace Kultie.Platformer2DSystem
             JumpCheck();
             DashCheck();
         }
+
+        #endregion
 
         #region Legacy
 
@@ -399,6 +415,8 @@ namespace Kultie.Platformer2DSystem
         }
 
         private bool _dashCoolingDown;
+        private Coroutine _dashCoolDown;
+
         void DashCheck()
         {
             if (Input.GetKeyDown(KeyCode.C) && _currentDashCount > 0 && CurrentState != State.Dash)
@@ -406,9 +424,8 @@ namespace Kultie.Platformer2DSystem
                 StartDash();
                 if (!_dashCoolingDown && _currentDashCount == 0)
                 {
-                    StartCoroutine(DashCoolDown());
+                    _dashCoolDown = StartCoroutine(DashCoolDown());
                 }
-
             }
 
             IEnumerator DashCoolDown()
