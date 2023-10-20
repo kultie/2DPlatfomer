@@ -6,31 +6,51 @@ using UnityEngine;
 
 namespace Kultie.Platformer2DSystem
 {
+    public enum State
+    {
+        // Grounded,
+
+        /// <summary>
+        /// Standing on ground
+        /// </summary>
+        Idle,
+
+        /// <summary>
+        /// Falling
+        /// </summary>
+        Air,
+
+        /// <summary>
+        /// Special state for jump when leave platform
+        /// </summary>
+        Coyote,
+
+        /// <summary>
+        /// Moving fast
+        /// </summary>
+        Dash,
+
+        /// <summary>
+        /// Move
+        /// </summary>
+        Run,
+
+        /// <summary>
+        /// Leave the ground, has 2 state before transition to air
+        /// </summary>
+        Jump,
+        Action,
+        Hurt,
+        Dead
+    };
+
     [DefaultExecutionOrder(1)]
     [RequireComponent(typeof(PhysicEntity), typeof(GravitationalEntity))]
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : MonoBehaviour, IEntity
     {
-        public enum State
-        {
-            Air,
-            Grounded,
-            Coyote,
-            Dash,
-
-            Idle,
-            Run,
-            Jump,
-            Attack1,
-            Attack2,
-            Hurt,
-            DashAttack,
-            Dead
-        };
-
         [SerializeField] private HorizontalMovementSetting movementSetting;
         [SerializeField] private JumpSetting jumpSetting;
         [SerializeField] private DashSetting dashSetting;
-        private State _currentState;
 
         public State CurrentState
         {
@@ -39,17 +59,23 @@ namespace Kultie.Platformer2DSystem
                 StateUpdate(_currentState, value);
                 _currentState = value;
             }
-            get { return _currentState; }
+            get => _currentState;
         }
 
-        private float _velocityX;
-        private float _velocityXSmoothing;
+        public PhysicEntity Physic => _physic;
+        public GravitationalEntity Gravitation => _gravitational;
+        public Animator Animator => _animator;
+        public SpriteRenderer Renderer => _renderer;
+        public float Facing => _facing;
+
+        private State _currentState;
         private PhysicEntity _physic;
         private GravitationalEntity _gravitational;
         private Animator _animator;
         private SpriteRenderer _renderer;
+        private float _velocityX;
+        private float _velocityXSmoothing;
         private float _airTime;
-
         private int _currentJumpCount;
         private int _currentDashCount;
         private float _queryJumpTime;
@@ -118,6 +144,10 @@ namespace Kultie.Platformer2DSystem
                     }
 
                     break;
+
+                case State.Dead:
+                    _animator.Play("Dead");
+                    break;
             }
         }
 
@@ -134,8 +164,6 @@ namespace Kultie.Platformer2DSystem
                 case State.Air:
                     AirState();
                     break;
-                case State.Grounded:
-                    break;
                 case State.Dash:
                     break;
                 case State.Idle:
@@ -147,16 +175,33 @@ namespace Kultie.Platformer2DSystem
                 case State.Jump:
                     JumpState();
                     break;
-                case State.Attack1:
-                    break;
-                case State.Attack2:
+                case State.Action:
+                    ActionState();
                     break;
                 case State.Hurt:
                     break;
-                case State.DashAttack:
-                    break;
                 case State.Dead:
+                    StopAllCoroutines();
                     break;
+            }
+        }
+
+        public void StartAction(IEnumerator seq)
+        {
+            StartCoroutine(Sequence());
+
+            IEnumerator Sequence()
+            {
+                CurrentState = State.Action;
+                yield return seq;
+                if (_physic.collisions.below)
+                {
+                    CurrentState = State.Idle;
+                }
+                else
+                {
+                    CurrentState = State.Air;
+                }
             }
         }
 
@@ -224,6 +269,18 @@ namespace Kultie.Platformer2DSystem
         }
 
         #region State Update
+
+        private void ActionState()
+        {
+            if (Physic.collisions.below)
+            {
+                GroundMoveProcess(0);
+            }
+            else
+            {
+                AirMoveProcess(0);
+            }
+        }
 
         private void IdleState()
         {
@@ -322,34 +379,34 @@ namespace Kultie.Platformer2DSystem
             _physic.SetVelocityX(_velocityX * Time.deltaTime);
         }
 
-        void UpdateGroundState()
-        {
-            if (_physic.collisions.below)
-            {
-                CurrentState = State.Grounded;
-                _airTime = 0;
-                _currentJumpCount = jumpSetting.jumpCount;
-                if (Time.realtimeSinceStartup - _queryJumpTime <= jumpSetting.timeToSpamJump)
-                {
-                    StartJump();
-                }
-            }
-            else
-            {
-                _airTime += Time.deltaTime;
-                if (CurrentState == State.Grounded)
-                {
-                    if (_airTime >= jumpSetting.coyoteTime)
-                    {
-                        CurrentState = State.Air;
-                    }
-                    else
-                    {
-                        CurrentState = State.Coyote;
-                    }
-                }
-            }
-        }
+        // void UpdateGroundState()
+        // {
+        //     if (_physic.collisions.below)
+        //     {
+        //         CurrentState = State.Grounded;
+        //         _airTime = 0;
+        //         _currentJumpCount = jumpSetting.jumpCount;
+        //         if (Time.realtimeSinceStartup - _queryJumpTime <= jumpSetting.timeToSpamJump)
+        //         {
+        //             StartJump();
+        //         }
+        //     }
+        //     else
+        //     {
+        //         _airTime += Time.deltaTime;
+        //         if (CurrentState == State.Grounded)
+        //         {
+        //             if (_airTime >= jumpSetting.coyoteTime)
+        //             {
+        //                 CurrentState = State.Air;
+        //             }
+        //             else
+        //             {
+        //                 CurrentState = State.Coyote;
+        //             }
+        //         }
+        //     }
+        // }
 
         #endregion
 
