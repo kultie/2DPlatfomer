@@ -7,9 +7,10 @@ namespace Kultie.Platformer2DSystem
     [CreateAssetMenu(menuName = "Entity Action/Player/Normal")]
     public class NormalAttack : EntityAction
     {
+        [SerializeField] private string animationState;
         public override IEnumerator Process(IEntity caster)
         {
-            caster.Animator.Play("Attack1");
+            caster.Animator.Play(animationState);
             yield return null;
             while (true)
             {
