@@ -15,12 +15,16 @@ namespace Kultie.Platformer2DSystem
 
         public override IEnumerator Process(IEntity caster)
         {
+            
+            // AnimationPlayableUtilities.PlayClip(animator, actionClip, out _playableGraph);
+            
             _playableGraph = PlayableGraph.Create();
             _playableGraph.SetTimeUpdateMode(DirectorUpdateMode.GameTime);
             var animatorOutput = AnimationPlayableOutput.Create(_playableGraph, "Action", animator);
             var playableClip = AnimationClipPlayable.Create(_playableGraph, actionClip);
             animatorOutput.SetSourcePlayable(playableClip);
             _playableGraph.Play();
+            
             float duration = actionClip.length;
             while (duration > 0)
             {

@@ -437,7 +437,10 @@ namespace Kultie.Platformer2DSystem
             if (input.x != 0)
             {
                 _facing = input.x;
-                _renderer.flipX = _facing < 0;
+                // _renderer.flipX = _facing < 0;
+                var facingVector = Vector3.one;
+                facingVector.x = _facing > 0 ? 1 : -1;
+                transform.localScale = facingVector;
             }
 
             return targetVelocityX;

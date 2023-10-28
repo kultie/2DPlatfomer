@@ -32,10 +32,10 @@ namespace Kultie.Platformer2DSystem
                 a.Hit(this);
             }
 
-            if (subjects.Length > 0)
-            {
-                StartCoroutine(HitStopSequence());
-            }
+            // if (subjects.Length > 0)
+            // {
+            //     StartCoroutine(HitStopSequence());
+            // }
         }
 
         IEnumerator HitStopSequence()
