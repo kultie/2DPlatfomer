@@ -13,12 +13,35 @@ namespace Kultie.Platformer2DSystem
         private IEntity _owner;
         [SerializeField] private int maxTargetHit = 5;
         [SerializeField] private int hitLagFrame = 5;
+        [SerializeField] private bool multiHit = false;
+        [SerializeField] private float hitInterval = 0.03f;
 
         private void OnEnable()
         {
             _owner = GetComponentInParent<IEntity>();
             _collider = GetComponent<BoxCollider2D>();
-            Collider2D[] hitSubjects = new Collider2D[5];
+
+
+            CollisionCheck();
+
+            if (multiHit)
+            {
+                StartCoroutine(MultiCheck());
+            }
+        }
+
+        IEnumerator MultiCheck()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(hitInterval);
+                CollisionCheck();
+            }
+        }
+
+        void CollisionCheck()
+        {
+            Collider2D[] hitSubjects = new Collider2D[maxTargetHit];
             _collider.OverlapCollider(new ContactFilter2D()
             {
                 useLayerMask = true,
@@ -32,14 +55,15 @@ namespace Kultie.Platformer2DSystem
                 a.Hit(this);
             }
 
-            // if (subjects.Length > 0)
-            // {
-            //     StartCoroutine(HitStopSequence());
-            // }
+            if (subjects.Length > 0)
+            {
+                StartCoroutine(HitStopSequence());
+            }
         }
 
         IEnumerator HitStopSequence()
         {
+            yield return null;
             Time.timeScale = 0;
             yield return new WaitForSecondsRealtime(hitLagFrame / 60f);
             Time.timeScale = 1;
