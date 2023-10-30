@@ -868,7 +868,7 @@ MonoBehaviour:
   maxTargetHit: 5
   hitLagFrame: 5
   multiHit: 1
-  hitInterval: 0.08
+  hitInterval: 0.1
 --- !u!61 &162454072
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -960,7 +960,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actionClip: {fileID: 7400000, guid: 7add88baa5de8324bb4fff738e4c0e35, type: 2}
-  animator: {fileID: 1649654435}
+  animator: {fileID: 0}
 --- !u!1 &337583587
 GameObject:
   m_ObjectHideFlags: 0
@@ -1655,7 +1655,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actionClip: {fileID: 7400000, guid: 91b935102ca9def4c9961175fe1d61ad, type: 2}
-  animator: {fileID: 1649654435}
+  animator: {fileID: 0}
 --- !u!1 &703358275
 GameObject:
   m_ObjectHideFlags: 3
