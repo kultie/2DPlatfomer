@@ -923,7 +923,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 259136812}
-  - component: {fileID: 259136813}
+  - component: {fileID: 259136814}
   m_Layer: 0
   m_Name: GroundAttack
   m_TagString: Untagged
@@ -947,7 +947,7 @@ Transform:
   m_Father: {fileID: 1649654430}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &259136813
+--- !u!114 &259136814
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -956,11 +956,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 259136811}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a145ca55e4a0bb642a05cb4e7b765a20, type: 3}
+  m_Script: {fileID: 11500000, guid: 4c16867e2491f0f489dc24d2b8dda348, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actionClip: {fileID: 7400000, guid: 7add88baa5de8324bb4fff738e4c0e35, type: 2}
-  animator: {fileID: 0}
+  actionClips:
+  - {fileID: 7400000, guid: 7add88baa5de8324bb4fff738e4c0e35, type: 2}
+  - {fileID: 7400000, guid: e90e53112c5f7bd46a53ef6a75309823, type: 2}
+  - {fileID: 7400000, guid: 8ce629c521adfe0499a4376bbec6b793, type: 2}
+  animator: {fileID: 1649654433}
 --- !u!1 &337583587
 GameObject:
   m_ObjectHideFlags: 0
@@ -2985,7 +2988,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.01219137, y: -0.13820028}
+  m_Offset: {x: 0, y: -0.36818826}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -2996,7 +2999,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.35294196, y: 1.0395021}
+  m_Size: {x: 0.2573241, y: 0.74559903}
   m_EdgeRadius: 0
 --- !u!212 &1649654429
 SpriteRenderer:
@@ -3142,7 +3145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c16c44c338761d49b18359580343dde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groundAttack: {fileID: 259136813}
+  groundAttack: {fileID: 259136814}
   skill1: {fileID: 599385159}
   skill2: {fileID: 0}
   airAttack: {fileID: 2047522953}

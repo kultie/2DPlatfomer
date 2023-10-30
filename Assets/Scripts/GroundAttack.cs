@@ -10,14 +10,11 @@ namespace Kultie.Platformer2DSystem
     public class GroundAttack : EntityAction
     {
         [SerializeField] private AnimationClip actionClip;
-        [SerializeField] private AnimancerComponent animator;
+        [SerializeField] private Animator animator;
         
-        private PlayableGraph _playableGraph;
 
         public override IEnumerator Process(IEntity caster)
         {
-            // AnimationPlayableUtilities.PlayClip(animator, actionClip, out _playableGraph);
-            var animator = GetComponentInParent<Animator>();
             yield return animator.PlayClip(actionClip);
         }
     }

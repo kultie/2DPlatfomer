@@ -48,6 +48,8 @@ namespace Kultie.Platformer2DSystem
     [RequireComponent(typeof(PhysicEntity), typeof(GravitationalEntity))]
     public class PlayerController : MonoBehaviour, IEntity
     {
+        public delegate void OnStateChange(State previousState, State nextState);
+
         [SerializeField] private HorizontalMovementSetting movementSetting;
         [SerializeField] private JumpSetting jumpSetting;
         [SerializeField] private DashSetting dashSetting;
@@ -56,8 +58,10 @@ namespace Kultie.Platformer2DSystem
         {
             set
             {
-                StateUpdate(_currentState, value);
+                var oldState = _currentState;
                 _currentState = value;
+                StateUpdate(oldState, _currentState);
+                ON_STATE_CHANGE?.Invoke(oldState, _currentState);
             }
             get => _currentState;
         }
@@ -80,6 +84,7 @@ namespace Kultie.Platformer2DSystem
         private int _currentDashCount;
         private float _queryJumpTime;
         private float _facing = 1;
+        public event OnStateChange ON_STATE_CHANGE;
 
         private void Awake()
         {
@@ -92,9 +97,9 @@ namespace Kultie.Platformer2DSystem
             CurrentState = State.Air;
         }
 
-        private void StateUpdate(State currentState, State nextState)
+        private void StateUpdate(State previousState, State currentState)
         {
-            switch (nextState)
+            switch (currentState)
             {
                 case State.Jump:
                     _animator.Play("Jump");
@@ -215,7 +220,6 @@ namespace Kultie.Platformer2DSystem
             IEnumerator ProcessDash()
             {
                 float time = _physic.collisions.below ? dashSetting.dashTime : dashSetting.airDashTime;
-                CurrentState = State.Dash;
                 _gravitational.EnableGravity(false, true);
                 while (time > 0)
                 {
@@ -239,7 +243,6 @@ namespace Kultie.Platformer2DSystem
             IEnumerator Leap()
             {
                 float time = dashSetting.dashTime;
-                CurrentState = State.Dash;
                 _gravitational.Jump(dashSetting.dashSpeed / 2);
                 while (time > 0)
                 {
